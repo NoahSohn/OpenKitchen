@@ -2,11 +2,10 @@
 import os
 from flask import Flask, request
 from flask import jsonify
-
-
-from pymongo import MongoClient
 from pymongo.server_api import ServerApi
+from pymongo.mongo_client import MongoClient
 from bson.objectid import ObjectId
+import pymongo
 
 #for some reason micah says we need this, IMO we should just commit the api keys
 from dotenv import load_dotenv
@@ -71,10 +70,9 @@ def delfile():
         retrivedfile = "404 fileid not found"
     else:
         print(retrivedfile)
-        retrivedfile['_id'] = str(retrivedfile['_id'])
-    print(retrivedfile)
-
+        dbmain.delete_one({"_id" : retrivedfile["_id"]})
     return "202"
+
 #this will make a new file with an author and a title
 @app.route('/query', methods=['POST'])
 def createfile():
