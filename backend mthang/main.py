@@ -119,6 +119,15 @@ def getfiles():
     return (output, 202, {})
 # this allows the site to be open without shitting itself
 
+@app.route('/search', method=['GET'])
+def search():
+    querystr = 
+    files, _, _ = getfiles()
+    scores = []
+    for file in files: 
+        scores.append(0)
+
+
 
 @app.route("/")
 def hello_world():
