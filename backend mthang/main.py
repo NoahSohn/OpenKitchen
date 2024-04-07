@@ -39,34 +39,38 @@ app = Flask(__name__)
 
 @app.route('/query', methods=['GET'])
 def getfile():
-    filenum = ""
-    filenum = request.args["fileid"]
-    if filenum == None:
-        filenum = "404 fileid not found"
-    retrivedfile = ""
-    retrivedfile = dbmain.find_one({"_id": ObjectId(filenum)})
+    searchterm = request.args["term"]
+    if searchterm == None:
+        searchterm = "_id"
+
+    searchvalue = request.args["value"].strip()
+    if searchvalue == None:
+        searchvalue = "0"
+    if searchterm == "_id":
+        searchvalue = ObjectId(searchvalue)
+
+    retrivedfile = dbmain.find_one({searchterm:searchvalue})
     if retrivedfile == None:
         retrivedfile = "404 fileid not found"
     else:
         print(retrivedfile)
         retrivedfile['_id'] = str(retrivedfile['_id'])
     print(retrivedfile)
-    outputfile = jsonify(retrivedfile)
-    return outputfile
+    return retrivedfile
 
 # this will make a new file with an author and a title
 
 
 @app.route('/query', methods=['POST'])
 def createfile():
-    author = request.args["author"]
-    title = request.args["title"]
+    author = str(request.args["author"])
+    title = str(request.args["title"])
     post = {
         "author" : author,
         "title" : title,
     }
-    dbmain.insert_one(post)
-    return 202
+    dbmain.insert_one(post) 
+    return "202"
 
 @app.route('/query', methods=['DELETE'])
 def delfile():
@@ -85,9 +89,7 @@ def delfile():
         retrivedfile = "404 fileid not found"
     else:
         print(retrivedfile)
-        retrivedfile['_id'] = str(retrivedfile['_id'])
-    print(retrivedfile)
-
+        dbmain.delete_one(retrivedfile)
     return "202"
 
 #-----------------------------------------
