@@ -32,15 +32,20 @@ except Exception as e:
 app = Flask(__name__)
 
 #this is bad but im also bad so its all good
-#it takes in an entry id and spits out the corresponding entry
+#it takes in a search term and a search query
 @app.route('/query', methods=['GET'])
 def getfile():
-    filenum = ""
-    filenum = request.args["fileid"]
-    if filenum == None:
-        filenum = "404 fileid not found"
-    retrivedfile = ""
-    retrivedfile = dbmain.find_one({"_id":ObjectId(filenum)})
+    searchterm = request.args["term"]
+    if searchterm == None:
+        searchterm = "_id"
+
+    searchvalue = request.args["value"].strip()
+    if searchvalue == None:
+        searchvalue = "0"
+    if searchterm == "_id":
+        searchvalue = ObjectId(searchvalue)
+
+    retrivedfile = dbmain.find_one({searchterm:searchvalue})
     if retrivedfile == None:
         retrivedfile = "404 fileid not found"
     else:
