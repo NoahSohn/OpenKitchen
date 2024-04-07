@@ -2,14 +2,22 @@
 import os
 from flask import Flask, request
 from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 import contents
 from dotenv import load_dotenv
 
+load_dotenv()
+
 MONGODBKEY = os.getenv('MONGODBKEY')
 
-dbclient = MongoClient(MONGODBKEY)
-db = dbclient[""]
+dbclient = MongoClient(MONGODBKEY,server_api=ServerApi('1'))
 
+# Send a ping to confirm a successful connection
+try:
+    dbclient.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
 # create the Flask app
 app = Flask(__name__)
