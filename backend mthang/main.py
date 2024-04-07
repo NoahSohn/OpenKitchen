@@ -85,6 +85,23 @@ def createfile():
     dbmain.insert_one(post)
     return "202"
 
+@app.route('/update', methods=['PATCH'])
+def updatefile():
+    filenum = ""
+    filenum = request.args["fileid"]
+    if filenum == None:
+        filenum = "404 fileid not found"
+
+    data = ""
+    data = request.args["data"]
+    if data == None:
+        print("404 fileid not found")
+    print(data)
+    filter = {"_id":ObjectId(filenum)}
+    newvalues = { "$set": {'body': data}}
+    dbmain.update_one(filter, newvalues)
+    return ("good", 202, {})
+
 #this allows the site to be open without shitting itself
 @app.route("/")
 def hello_world():
