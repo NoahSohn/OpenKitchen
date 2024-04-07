@@ -52,9 +52,29 @@ def getfile():
         print(retrivedfile)
         retrivedfile['_id'] = str(retrivedfile['_id'])
     print(retrivedfile)
-    outputfile = jsonify(retrivedfile)
     return retrivedfile
 
+@app.route('/query', methods=['DELETE'])
+def delfile():
+    searchterm = request.args["term"]
+    if searchterm == None:
+        searchterm = "_id"
+
+    searchvalue = request.args["value"].strip()
+    if searchvalue == None:
+        searchvalue = "0"
+    if searchterm == "_id":
+        searchvalue = ObjectId(searchvalue)
+
+    retrivedfile = dbmain.find_one({searchterm:searchvalue})
+    if retrivedfile == None:
+        retrivedfile = "404 fileid not found"
+    else:
+        print(retrivedfile)
+        retrivedfile['_id'] = str(retrivedfile['_id'])
+    print(retrivedfile)
+
+    return "202"
 #this will make a new file with an author and a title
 @app.route('/query', methods=['POST'])
 def createfile():
