@@ -71,7 +71,8 @@ def updatefile():
     filter = {"_id":ObjectId(filenum)}
     newvalues = { "$set": {'body': data}}
     dbmain.update_one(filter, newvalues)
-    return ("U did it penis brain", 202, {})
+    return ("good", 202, {})
+
 
 #this allows the site to be open without shitting itself
 @app.route("/")
