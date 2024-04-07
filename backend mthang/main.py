@@ -59,7 +59,38 @@ def getfile():
 
 @app.route('/query', methods=['POST'])
 def createfile():
-    return None
+    author = request.args["author"]
+    title = request.args["title"]
+    post = {
+        "author" : author,
+        "title" : title,
+    }
+    dbmain.insert_one(post)
+    return 202
+
+@app.route('/query', methods=['DELETE'])
+def delfile():
+    searchterm = request.args["term"]
+    if searchterm == None:
+        searchterm = "_id"
+
+    searchvalue = request.args["value"].strip()
+    if searchvalue == None:
+        searchvalue = "0"
+    if searchterm == "_id":
+        searchvalue = ObjectId(searchvalue)
+
+    retrivedfile = dbmain.find_one({searchterm:searchvalue})
+    if retrivedfile == None:
+        retrivedfile = "404 fileid not found"
+    else:
+        print(retrivedfile)
+        retrivedfile['_id'] = str(retrivedfile['_id'])
+    print(retrivedfile)
+
+    return "202"
+
+#-----------------------------------------
 
 @app.route('/update', methods=['PATCH'])
 def updatefile():
