@@ -58,7 +58,14 @@ def getfile():
 #this will make a new file with an author and a title
 @app.route('/query', methods=['POST'])
 def createfile():
-    return None
+    author = request.args["author"]
+    title = request.args["title"]
+    post = {
+        "author" : author,
+        "title" : title,
+    }
+    dbmain.insert_one(post)
+    return "202"
 
 #this allows the site to be open without shitting itself
 @app.route("/")
