@@ -68,9 +68,34 @@ def createfile():
     post = {
         "author" : author,
         "title" : title,
+        "rating" : 0,
     }
     dbmain.insert_one(post) 
     return "202"
+
+
+@app.route('/vote', methods=['PATCH'])
+def ratepost():
+    userid = str(request.args["user"])
+    postid = ObjectId(request.args["postid"])
+    ratingchange = int(request.args["rating"])
+
+    if postid == None or userid == None or ratingchange == None:
+        postid = "404 fileid not found"
+        return "404"
+
+    post = dbmain.find_one({'_id' : postid})
+
+    if post == None:
+        return "that doesnt exist dumbass, 404"
+
+    
+    newrating = int(post["rating"]) + ratingchange
+    newvalues = {"$set": {'rating': newrating}}
+    dbmain.update_one({"_id": postid},newvalues)
+
+    return "202"
+
 
 @app.route('/query', methods=['DELETE'])
 def delfile():
