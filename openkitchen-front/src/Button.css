@@ -1,0 +1,33 @@
+.default-button {
+  /* Basic button styles */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; /* Optional transition for hover effect */
+  color: #FF0000
+}
+
+.pressed-button {
+  /* Basic button styles */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; /* Optional transition for hover effect */
+  color: #0000FF
+}
+
+.default-button img {
+  /* Style the image inside the button */
+  margin-right: 10px; /* Adjust spacing between image and text */
+}
+
+.pressed-button img {
+  /* Style the image inside the button */
+  margin-right: 10px; /* Adjust spacing between image and text */
+}
