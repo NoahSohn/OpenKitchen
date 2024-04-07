@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MONGODBKEY = os.getenv('MONGODBKEY')
-
+print(MONGODBKEY)
 dbclient = MongoClient(MONGODBKEY,server_api=ServerApi('1'))
 
 # Send a ping to confirm a successful connection
