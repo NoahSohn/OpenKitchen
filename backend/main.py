@@ -3,6 +3,7 @@ import os
 from flask import Flask, request
 from flask import jsonify
 
+import certifi
 
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
@@ -17,7 +18,7 @@ MONGODBKEY = os.getenv('MONGODBKEY')
 print(MONGODBKEY)
 
 #initing the mongodb thing
-dbclient = MongoClient(MONGODBKEY,server_api=ServerApi('1'))
+dbclient = MongoClient(MONGODBKEY,server_api=ServerApi('1'), tlsCAFile=certifi.where())
 dbdatabase = dbclient["openkitchen_posts"]
 dbmain = dbdatabase.main
 
@@ -55,19 +56,23 @@ def getfile():
 def createfile():
     return None
 
-@app.route('/update-file', methods=['PATCH'])
+@app.route('/update', methods=['PATCH'])
+def updatefile():
     filenum = ""
     filenum = request.args["fileid"]
     if filenum == None:
         filenum = "404 fileid not found"
+
     data = ""
     data = request.args["data"]
     if data == None:
         print("404 fileid not found")
+    print(data)
     filter = {"_id":ObjectId(filenum)}
     newvalues = { "$set": {'body': data}}
     dbmain.update_one(filter, newvalues)
-    return 202 
+    return ("good", 202, {})
+
 
 #this allows the site to be open without shitting itself
 @app.route("/")
