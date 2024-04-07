@@ -115,19 +115,38 @@ def getfiles():
     for x in dbmain.find():
         if "body" in x and "_id" in x and "author" in x and "title" in x:
             output.append({"_id":str(x["_id"]), "body":str(x["body"]), "author":x["author"], "title":x["title"]})
-    print(output)
     return (output, 202, {})
 # this allows the site to be open without shitting itself
 
-@app.route('/search', method=['GET'])
+@app.route('/search', methods=['GET'])
 def search():
-    querystr = 
+    querystr = "" 
+    querystr = request.args["query"]
+    if querystr == None:
+        querystr = "404 fileid not found"
     files, _, _ = getfiles()
     scores = []
-    for file in files: 
+    for i in range(len(files)): 
         scores.append(0)
+        for word in files[i]["body"].split(' '):
+            for searchword in querystr.split(' '):
+                if searchword in word:
+                    scores[i] += 1
 
+    lowest_score = 0
+    five_outputs = []
+    for i in range(len(scores)):
+        if len(five_outputs) < 5:
+            five_outputs.append((scores[i], str(files[i]["_id"])))
+            if scores[i] < lowest_score:
+                lowest_score = scores[i]
+        elif scores[i] > lowest_score:
+            for j in range(len(five_outputs)):
+                if five_outputs[j][0] == lowest_score:
+                    five_outputs[j] = (scores[i], str(files[i]["_id"]))
+            lowest_score = scores[i]
 
+    return (five_outputs, 202, {})
 
 @app.route("/")
 def hello_world():
